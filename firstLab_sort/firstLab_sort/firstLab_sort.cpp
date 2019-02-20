@@ -46,31 +46,31 @@ int* readFromFile(uint32_t lengthVector) {
 	in.close(); //закрываем файл
 }
 
-void quickSort(int* unsortedVector, int lengthVector) {
+void quickSort(int* unsortedVector, int first, int last) {
 
-	int i = 0, j = lengthVector - 1; 		// поставить указатели на исходные места
+	int i = first, j = last; 		// поставить указатели на исходные места
 	int pivot, temp;
 
-	pivot = unsortedVector[(lengthVector-1) >> 1 ];		// центральный элемент, не самый эффективный способ выбор опорного элемента
+	pivot = unsortedVector[(first + last) / 2];		// центральный элемент, не самый эффективный способ выбор опорного элемента
 
-	while (i <= j) {
+	do  {
 		while (unsortedVector[i] < pivot) i++;
 		while (unsortedVector[j] > pivot) j--;
 
 		if (i <= j) {
-			if (unsortedVector[i] >= unsortedVector[j]) {
+			if(i < j){
 				temp = unsortedVector[i];
 				unsortedVector[i] = unsortedVector[j];
 				unsortedVector[j] = temp;
-				i++; j--;
 			}
+			i++;
+			if (j > 0) j--;
 		}
-	};
+	}while (i <= j);
 
 
-
-	if (j > 0) quickSort(unsortedVector, j);
-	if (lengthVector > i) quickSort(unsortedVector + i, lengthVector - i);
+	if (i < last) quickSort(unsortedVector, i, last);
+	if (first < j) quickSort(unsortedVector, first, j);
 }
 
 void showVector(int* vectorIn, uint32_t lengthVector){
