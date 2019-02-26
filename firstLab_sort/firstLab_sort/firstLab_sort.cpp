@@ -6,7 +6,7 @@
 #include <iostream>
 #include <fstream>
 
-int* generateRandomVector(uint32_t lengthVector, uint32_t limit) {
+int* GenerateRandomVector(uint32_t lengthVector, uint32_t limit) {
 	if (lengthVector < 1) return  0;
 	int* vectorOut = new int[lengthVector];
 	for (uint32_t i = 0; i < lengthVector; i++) {
@@ -15,7 +15,7 @@ int* generateRandomVector(uint32_t lengthVector, uint32_t limit) {
 	return vectorOut;
 }
 
-void writeToFile(int* dataIn, uint32_t lengthVector, bool flag){
+void WriteToFile(int* dataIn, uint32_t lengthVector, bool flag){
 	std::ofstream out;
 	if (flag) {
 		out.open("genetaredVector.txt");
@@ -33,7 +33,7 @@ void writeToFile(int* dataIn, uint32_t lengthVector, bool flag){
 	//delete[] dataIn;
 }
 
-int* readFromFile(uint32_t lengthVector) {
+int* ReadFromFile(uint32_t lengthVector) {
 	std::ifstream in("genetaredVector.txt");
 	if (in.is_open()) {
 		int* vectorFromFile = new int[lengthVector];
@@ -46,7 +46,7 @@ int* readFromFile(uint32_t lengthVector) {
 	in.close(); //закрываем файл
 }
 
-void quickSort(int* unsortedVector, int first, int last) {
+void QuickSort(int* unsortedVector, int first, int last) {
 
 	int i = first, j = last; 		// поставить указатели на исходные места
 	int pivot, temp;
@@ -69,47 +69,66 @@ void quickSort(int* unsortedVector, int first, int last) {
 	}while (i <= j);
 
 
-	if (i < last) quickSort(unsortedVector, i, last);
-	if (first < j) quickSort(unsortedVector, first, j);
+	if (i < last) QuickSort(unsortedVector, i, last);
+	if (first < j) QuickSort(unsortedVector, first, j);
 }
 
-void showVector(int* vectorIn, uint32_t lengthVector){
-	for (int i = 0; i < lengthVector; i++) {
+void ShowVector(int* vectorIn, uint32_t lengthVector){
+	for (uint32_t i = 0; i < lengthVector; i++) {
 		std::cout << vectorIn[i] << ' ';
 	}
 	std::cout << std::endl;
 }
 
-void testFunctions() {
+void TestFunctions() {
 	//sorted vector
 	int vector1[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 	std::cout << "Test1: sorted vecror: " << std::endl;
 	std::cout << "Before: " << std::endl;
-	showVector(vector1, 10);
-	quickSort(vector1, 10);
+	ShowVector(vector1, 10);
+	QuickSort(vector1, 0, 10-1);
 	std::cout << "After: " << std::endl;
-	showVector(vector1, 10);
+	ShowVector(vector1, 10);
+
 	// -1, 1 numbers 
 	int vector2[10] = { -1, -1, -1, 1, 1, -1, 1, -1, -1, 1 };
 	std::cout << "Test2: -1, 1 numbers : " << std::endl;
 	std::cout << "Before: " << std::endl;
-	showVector(vector2, 10);
-	quickSort(vector2, 10);
+	ShowVector(vector2, 10);
+	QuickSort(vector2, 0, 10-1);
 	std::cout << "After: " << std::endl;
-	showVector(vector2, 10);
+	ShowVector(vector2, 10);
+
+	//reverse sorted vector
+	int vector3[10] = {10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
+	std::cout << "reverse sorted vector: " << std::endl;
+	std::cout << "Before: " << std::endl;
+	ShowVector(vector3, 10-1);
+	QuickSort(vector3, 0, 10-1);
+	std::cout << "After: " << std::endl;
+	ShowVector(vector3, 10);
+
+	//empty vector 
+	int vector4[1] = {};
+	std::cout << "empty vector: " << std::endl;
+	std::cout << "Before: " << std::endl;
+	ShowVector(vector4, 0);
+	QuickSort(vector4, 0, 0);
+	std::cout << "After: " << std::endl;
+	ShowVector(vector4, 0);
 }
 
 int main()
 {
 	uint32_t N = 10; // длинна массива
-	int* vector = generateRandomVector(10, 255);
-	writeToFile(vector, N, true);
-	/*int* vector = new int[N];*/
-	vector = readFromFile(N);
-	quickSort(vector, 10);
-	writeToFile(vector, N, false);
-	delete[] vector;
-	testFunctions();
+	int* vector = new int[N];
+	vector = GenerateRandomVector(N, 255);
+	WriteToFile(vector, N, true);
+	vector = ReadFromFile(N);
+	QuickSort(vector,0, N-1);
+	WriteToFile(vector, N, false);
+	delete [] vector;
+	TestFunctions();
 	std::cout << std::endl;
 	std::cout << "______________________\n";
     std::cout << "THE END\n"; 
