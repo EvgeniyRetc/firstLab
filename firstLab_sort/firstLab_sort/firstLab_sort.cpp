@@ -6,18 +6,23 @@
 #include <iostream>
 #include <fstream>
 
-int* GenerateRandomVector(uint32_t lengthVector, uint32_t limit) {
-	if (lengthVector < 1) return  0;
-	int* vectorOut = new int[lengthVector];
+#define SORTED_FILE_FLAG false
+#define GENERATED_FILE_FLAG true
+
+void GenerateRandomVector(int* vector, uint32_t lengthVector, uint32_t limit) {
+	if (lengthVector < 1) return;
 	for (uint32_t i = 0; i < lengthVector; i++) {
-		vectorOut[i] = rand() % limit;
+		vector[i] = rand() % limit;
 	}
-	return vectorOut;
 }
 
-void WriteToFile(int* dataIn, uint32_t lengthVector, bool flag){
+
+
+
+
+void WriteToFile(int* dataIn, uint32_t lengthVector, bool choiceFileFlag){
 	std::ofstream out;
-	if (flag) {
+	if (choiceFileFlag) {
 		out.open("genetaredVector.txt");
 	}
 	else {
@@ -33,16 +38,14 @@ void WriteToFile(int* dataIn, uint32_t lengthVector, bool flag){
 	//delete[] dataIn;
 }
 
-int* ReadFromFile(uint32_t lengthVector) {
+void ReadFromFile(int* vectorFromFile, uint32_t lengthVector) {
 	std::ifstream in("genetaredVector.txt");
 	if (in.is_open()) {
-		int* vectorFromFile = new int[lengthVector];
+		vectorFromFile = new int[lengthVector];
 		for (uint32_t i = 0; i < lengthVector; i++) {
 			in >> vectorFromFile[i];
 		}
-		return vectorFromFile;
 	}
-	return 0;
 	in.close(); //закрываем файл
 }
 
@@ -80,67 +83,82 @@ void ShowVector(int* vectorIn, uint32_t lengthVector){
 	std::cout << std::endl;
 }
 
-void TestFunctions() {
+
+void TestRandomVector() {
+	//random vector
+	int vector[10];
+	GenerateRandomVector(vector, 10, 255);
+	std::cout << "Test1: random vecror: " << std::endl;
+	std::cout << "Before: " << std::endl;
+	ShowVector(vector, 10);
+	QuickSort(vector, 0, 10 - 1);
+	std::cout << "After: " << std::endl;
+	ShowVector(vector, 10);
+}
+
+void TestSortedVector(){
 	//sorted vector
-	int vector1[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-	std::cout << "Test1: sorted vecror: " << std::endl;
+	int vector[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+	std::cout << "Test2: sorted vecror: " << std::endl;
 	std::cout << "Before: " << std::endl;
-	ShowVector(vector1, 10);
-	QuickSort(vector1, 0, 10-1);
+	ShowVector(vector, 10);
+	QuickSort(vector, 0, 10 - 1);
 	std::cout << "After: " << std::endl;
-	ShowVector(vector1, 10);
+	ShowVector(vector, 10);
+}
 
+void Test1not1Vector() {
 	// -1, 1 numbers 
-	int vector2[10] = { -1, -1, -1, 1, 1, -1, 1, -1, -1, 1 };
-	std::cout << "Test2: -1, 1 numbers : " << std::endl;
+	int vector[10] = { -1, -1, -1, 1, 1, -1, 1, -1, -1, 1 };
+	std::cout << "Test3: -1, 1 numbers : " << std::endl;
 	std::cout << "Before: " << std::endl;
-	ShowVector(vector2, 10);
-	QuickSort(vector2, 0, 10-1);
+	ShowVector(vector, 10);
+	QuickSort(vector, 0, 10 - 1);
 	std::cout << "After: " << std::endl;
-	ShowVector(vector2, 10);
+	ShowVector(vector, 10);
+}
 
+void TestReverseVector() {
 	//reverse sorted vector
-	int vector3[10] = {10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
-	std::cout << "reverse sorted vector: " << std::endl;
+	int vector[10] = { 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 };
+	std::cout << "Test4: reverse sorted vector: " << std::endl;
 	std::cout << "Before: " << std::endl;
-	ShowVector(vector3, 10-1);
-	QuickSort(vector3, 0, 10-1);
+	ShowVector(vector, 10 - 1);
+	QuickSort(vector, 0, 10 - 1);
 	std::cout << "After: " << std::endl;
-	ShowVector(vector3, 10);
+	ShowVector(vector, 10);
+}
 
+void TestEmptyVector(){
 	//empty vector 
-	int vector4[1] = {};
-	std::cout << "empty vector: " << std::endl;
+	int vector[1] = {};
+	std::cout << "Test5: empty vector: " << std::endl;
 	std::cout << "Before: " << std::endl;
-	ShowVector(vector4, 0);
-	QuickSort(vector4, 0, 0);
+	ShowVector(vector, 0);
+	QuickSort(vector, 0, 0);
 	std::cout << "After: " << std::endl;
-	ShowVector(vector4, 0);
+	ShowVector(vector, 0);
+}
+void TestFunctions() {
+
+	TestRandomVector();
+	TestSortedVector();
+	Test1not1Vector();
+	TestReverseVector();
+	TestEmptyVector();
 }
 
 int main()
 {
-	uint32_t N = 10; // длинна массива
-	int* vector = new int[N];
-	vector = GenerateRandomVector(N, 255);
-	WriteToFile(vector, N, true);
-	vector = ReadFromFile(N);
-	QuickSort(vector,0, N-1);
-	WriteToFile(vector, N, false);
-	delete [] vector;
+	const uint32_t NUMBER_OF_ELEMENTS = 10; // длинна массива
+	int vector[10]; 
+	GenerateRandomVector(vector, NUMBER_OF_ELEMENTS, 255);
+	WriteToFile(vector, NUMBER_OF_ELEMENTS, GENERATED_FILE_FLAG);
+	ReadFromFile(vector, NUMBER_OF_ELEMENTS);
+	QuickSort(vector, 0, NUMBER_OF_ELEMENTS - 1);
+	WriteToFile(vector, NUMBER_OF_ELEMENTS, SORTED_FILE_FLAG);
 	TestFunctions();
 	std::cout << std::endl;
 	std::cout << "______________________\n";
     std::cout << "THE END\n"; 
 }
-
-// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
-// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
-
-// Советы по началу работы 
-//   1. В окне обозревателя решений можно добавлять файлы и управлять ими.
-//   2. В окне Team Explorer можно подключиться к системе управления версиями.
-//   3. В окне "Выходные данные" можно просматривать выходные данные сборки и другие сообщения.
-//   4. В окне "Список ошибок" можно просматривать ошибки.
-//   5. Последовательно выберите пункты меню "Проект" > "Добавить новый элемент", чтобы создать файлы кода, или "Проект" > "Добавить существующий элемент", чтобы добавить в проект существующие файлы кода.
-//   6. Чтобы снова открыть этот проект позже, выберите пункты меню "Файл" > "Открыть" > "Проект" и выберите SLN-файл.
