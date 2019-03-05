@@ -20,7 +20,7 @@ void GenerateRandomVector(int* vector, uint32_t lengthVector, uint32_t limit) {
 
 
 
-void WriteToFile(int* dataIn, uint32_t lengthVector, bool choiceFileFlag){
+void WriteToWorkFile(int* dataIn, uint32_t lengthVector, bool choiceFileFlag){
 	std::ofstream out;
 	if (choiceFileFlag) {
 		out.open("genetaredVector.txt");
@@ -38,8 +38,8 @@ void WriteToFile(int* dataIn, uint32_t lengthVector, bool choiceFileFlag){
 	//delete[] dataIn;
 }
 
-void ReadFromFile(int* vectorFromFile, uint32_t lengthVector) {
-	std::ifstream in("genetaredVector.txt");
+void ReadFromFile(int* vectorFromFile, uint32_t lengthVector, std::string fileName) {
+	std::ifstream in(fileName);
 	if (in.is_open()) {
 		vectorFromFile = new int[lengthVector];
 		for (uint32_t i = 0; i < lengthVector; i++) {
@@ -99,7 +99,7 @@ void TestRandomVector() {
 void TestSortedVector(){
 	//sorted vector
 	int vector[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-	std::cout << "Test2: sorted vecror: " << std::endl;
+	std::cout << "Test2: sorted vector: " << std::endl;
 	std::cout << "Before: " << std::endl;
 	ShowVector(vector, 10);
 	QuickSort(vector, 0, 10 - 1);
@@ -153,10 +153,10 @@ int main()
 	const uint32_t NUMBER_OF_ELEMENTS = 10; // длинна массива
 	int vector[10]; 
 	GenerateRandomVector(vector, NUMBER_OF_ELEMENTS, 255);
-	WriteToFile(vector, NUMBER_OF_ELEMENTS, GENERATED_FILE_FLAG);
-	ReadFromFile(vector, NUMBER_OF_ELEMENTS);
+	WriteToWorkFile(vector, NUMBER_OF_ELEMENTS, GENERATED_FILE_FLAG);
+	ReadFromFile(vector, NUMBER_OF_ELEMENTS, "genetaredVector.txt");
 	QuickSort(vector, 0, NUMBER_OF_ELEMENTS - 1);
-	WriteToFile(vector, NUMBER_OF_ELEMENTS, SORTED_FILE_FLAG);
+	WriteToWorkFile(vector, NUMBER_OF_ELEMENTS, SORTED_FILE_FLAG);
 	TestFunctions();
 	std::cout << std::endl;
 	std::cout << "______________________\n";
